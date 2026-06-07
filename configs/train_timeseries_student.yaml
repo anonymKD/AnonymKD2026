@@ -1,0 +1,86 @@
+dataset: UWaveGestureLibraryAll
+input_modality: 'ts'
+downsample_size: 100
+chan_last: True
+
+ts_model_kwargs:
+  hidden_size: 32
+  num_layers: 2
+
+batch_size: 32
+epochs: 150
+
+# val_size: 0.2
+val_loss_monitor_metric: top1 #top5, test_loss
+val_loss_monitor_mode: max
+
+opt: adamw
+lr: 0.001
+weight_decay: 1e-4
+
+sched: cosine
+warmup_epochs: 0
+min_lr: 1.0e-5
+warmup_lr: 0.2
+
+drop: 0.0
+smoothing: 0.0
+momentum: 0.9   # unused if Adam
+workers: 4
+seed: 1
+
+
+
+teacher_ckpt: 'exp_ts_teachers/ts_lstm_100_3/UWaveGestureLibraryAll/best.pth.tar'
+teacher_model: 'ts_lstm_100_3'
+teacher_pretrained: True
+train_feature_space_diffsion: False
+
+
+log_interval: 50
+aa: null
+color_jitter: 0.0
+cutout_length: 16
+decay_by_epoch: false
+decay_epochs: 3
+decay_rate: 0.967
+model_ema: false
+model_ema_decay: 0.9998
+opt_betas: null
+opt_eps: 1.0e-08
+remode: const
+reprob: 0.0
+sgd_no_nesterov: True
+opt_no_filter: True
+
+# dyrep
+dyrep: False
+dyrep_adjust_interval: 15
+dyrep_recal_bn_every_epoch: False
+dyrep_max_adjust_epochs: 500
+
+kd: ''
+kd_loss_weight: 1
+kd_loss_kwargs:
+  use_ae: True
+  ae_channels: 1024
+  tau: 1
+
+generative_prior_kwargs:
+  generative_prior_ckpt: 'exp_ts_teachers/ts_lstm_100_3_LD/UWaveGestureLibraryAll/best.pth.tar'
+  generative_prior_model: 'latentdiffusion'
+  uncertain_teacher_diffusion_steps: [50, 30]
+  frozen_gen_prior: True
+  use_ae: True
+  ae_channels: 1024
+  diff_loss_weight: 1.0
+  ae_loss_weight: 1.0
+  guidance_scale: [0.3, 0.5]
+  feature_guidance: False
+  classifier_guidance: True
+  add_logits_loss: True
+  is_reverse_sched: False
+  
+
+
+
